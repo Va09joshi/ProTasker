@@ -51,7 +51,7 @@ class RegisterScreen extends StatefulWidget {
    @override
    Widget build(BuildContext context) {
      return Scaffold(
-       backgroundColor: Colors.white.withOpacity(0.98),
+       backgroundColor: Colors.white,
        body: SingleChildScrollView(
          padding: const EdgeInsets.all(20),
          child: Column(
@@ -137,7 +137,7 @@ class RegisterScreen extends StatefulWidget {
                      _register();
                  },
                  style: ElevatedButton.styleFrom(
-                   backgroundColor: Colors.deepPurple.shade500,
+                   backgroundColor: Color(0xff09205f),
                    shape: RoundedRectangleBorder(
                      borderRadius: BorderRadius.circular(30),
                    ),
@@ -211,6 +211,11 @@ class RegisterScreen extends StatefulWidget {
                  ),
                ],
              ),
+             SizedBox(height: 22,),
+             Center(child: Text("Powered And Handled",style: GoogleFonts.getFont("Lato",fontSize: 14,fontWeight: FontWeight.bold),)),
+             Center(child: Text("By",style: GoogleFonts.getFont("Lato",fontSize: 14,fontWeight: FontWeight.bold),)),
+
+             Center(child: Image.asset("assets/images/logo2.png",width: 170,)),
            ],
          ),
        ),

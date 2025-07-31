@@ -39,8 +39,9 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text("VBot - Ultimate Ai"),
-        backgroundColor: Colors.deepPurple.shade900.withOpacity(.98),
+        backgroundColor: Color(0xff2b5876),
         titleTextStyle: GoogleFonts.lato(
           fontSize: 16,
           fontWeight: FontWeight.bold,
@@ -165,7 +166,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 const SizedBox(width: 10),
                 FloatingActionButton(
                   heroTag: "send_button",
-                  backgroundColor: Colors.deepPurple.shade900.withOpacity(.80),
+                  backgroundColor: Color(0xff2b5876),
                   foregroundColor: Colors.white,
                   onPressed: () {
                     if (messageController.text.trim().isNotEmpty) {

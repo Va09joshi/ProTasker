@@ -27,8 +27,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // Paw icon
-                Icon(Icons.miscellaneous_services_sharp,
-                    size: 70, color: Color(0xff151E23)),
+                Image.asset("assets/images/logo2.png",width: 250,),
 
                 const SizedBox(height: 16),
 
@@ -56,7 +55,7 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                 // Sign up button
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.deepPurple.shade500,
+                    backgroundColor: Color(0xff09205f),
                     foregroundColor: Colors.white,
                     minimumSize: const Size(double.infinity, 50),
                     shape: RoundedRectangleBorder(

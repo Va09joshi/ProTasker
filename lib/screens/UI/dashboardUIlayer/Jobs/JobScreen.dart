@@ -47,23 +47,51 @@ class _JobsScreenState extends State<JobsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const Gradient customGradient = LinearGradient(
-      colors: [Color(0xFF7B1FA2), Color(0xFF512DA8)],
+    final LinearGradient customGradient = const LinearGradient(
+      colors: [Color(0xFF09203f), Color(0xFF13547a)],
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
     );
 
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+
+          // 🔹 First FAB (e.g., Help)
+          FloatingActionButton.extended(
+            heroTag: "btn1",
+            onPressed: () {
+              _showAddJobSheet();
+              // First action
+            },
+            icon: const Icon(Icons.add,color: Colors.black,),
+            label:  Text("Job Post",style: GoogleFonts.getFont("Lato",color: Colors.black,fontWeight: FontWeight.bold,fontSize: 16),),
+            backgroundColor: Colors.white70,
+          ),
+
+          const SizedBox(height: 12),
+
+          // 🔹 Second FAB (e.g., Add Task)
+          FloatingActionButton.extended(
+            heroTag: "btn2",
+            onPressed: () {
+             _showAddJobSheet();
+              // Second action
+            },
+            icon: const Icon(Icons.add),
+            label:  Text("New Task",style: GoogleFonts.getFont("Lato",color: Colors.black,fontWeight: FontWeight.bold,fontSize: 16),),
+            backgroundColor: Colors.white70,
+          ),
+        ],
+      ),
+
 
       // -----------------------------------------------------------------------
       //  FAB  ➕  (NEW)
       // -----------------------------------------------------------------------
-      floatingActionButton: FloatingActionButton(
-        onPressed: _showAddJobSheet,
-        child: const Icon(Icons.add,color: Colors.white,),
-        backgroundColor: Colors.deepPurple,
-      ),
 
       body: SafeArea(
         child: ListView(
@@ -117,8 +145,8 @@ class _JobsScreenState extends State<JobsScreen> {
               child: CupertinoSegmentedControl<int>(
                 groupValue: _segmentIndex,
                 padding: const EdgeInsets.all(4),
-                selectedColor: Colors.deepPurple,
-                borderColor: Colors.deepPurple,
+                selectedColor: Color(0xFF09203f),
+                borderColor: Color(0xFF09203f),
                 children: const {
                   0: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 14, vertical: 6),

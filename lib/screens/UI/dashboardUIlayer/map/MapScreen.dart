@@ -29,7 +29,7 @@ class Mapscreen extends StatefulWidget {
          shadowColor: Colors.black45,
          bottomOpacity: 12,
          centerTitle: true,
-         backgroundColor: Colors.deepPurple.shade400,
+         backgroundColor: Color(0xFF09203f),
          titleTextStyle: GoogleFonts.getFont("Lato",fontWeight: FontWeight.bold,color: Colors.white,fontSize: 16),
          toolbarHeight: 70,
 

@@ -26,7 +26,7 @@ class _DashboardscreenState extends State<Dashboardscreen> {
   ];
 
   final LinearGradient customGradient = const LinearGradient(
-    colors: [Color(0xFF7B1FA2), Color(0xFF512DA8)],
+    colors: [Color(0xFF09203f), Color(0xFF13547a)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );

@@ -68,7 +68,7 @@ class Homescreen extends StatelessWidget {
   ];
 
   final LinearGradient customGradient = const LinearGradient(
-    colors: [Color(0xFF7B1FA2), Color(0xFF512DA8)],
+    colors: [Color(0xFF09203f), Color(0xFF13547a)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
@@ -76,12 +76,86 @@ class Homescreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(onPressed: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context){
-           return ChatScreen();
-        }));
-      },child: Icon(Icons.chat,color: Colors.white,),backgroundColor: Colors.deepPurple.shade400,),
-      body : SafeArea(
+      backgroundColor: Colors.white12,
+      floatingActionButton: GestureDetector(
+        onTap: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return ChatScreen();
+          }));
+        },
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 84,
+                  height: 84,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF09203f), Color(0xFF13547a), Color(0xFF2980B9)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        blurRadius: 8,
+                        offset: const Offset(2, 4),
+                      ),
+                    ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(14),
+                    child: ClipOval(
+                      child: Image.asset(
+                        'assets/images/chatbots.jpeg',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  "Ask Anything?",
+                  style: GoogleFonts.lato(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black87,
+                  ),
+                ),
+              ],
+            ),
+            Positioned(
+              bottom: 36,
+              right: 8,
+              child: Container(
+                padding: const EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 6,
+                      offset: const Offset(2, 2),
+                    ),
+                  ],
+                ),
+                child: const Icon(
+                  Icons.chat_bubble_outline,
+                  color: Colors.blueAccent,
+                  size: 18,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+
+        body : SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(12),
           child: Column(
@@ -197,107 +271,153 @@ class Homescreen extends StatelessWidget {
               const SizedBox(height: 8),
       
               /// List
-              ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: requests.length,
-                itemBuilder: (context, index) {
-                  final req = requests[index];
-                  bool isPerson = req['type'] == 'person';
-                  return Container(
-                    margin: const EdgeInsets.symmetric(vertical: 8),
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
-                          blurRadius: 10,
-                          offset: const Offset(0, 5),
-                        )
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            if (isPerson)
-                              CircleAvatar(
-                                radius: 24,
-                                backgroundImage: NetworkImage(req['avatar'] ?? ''),
-                              )
-                            else
-                              Icon(
-                                req['type'] == 'plumbing'
-                                    ? Icons.plumbing
-                                    : req['type'] == 'ac'
-                                    ? Icons.ac_unit
-                                    : req['type'] == 'electric'
-                                    ? Icons.electrical_services
-                                    : req['type'] == 'appliance' && (req['name']?.toLowerCase().contains('tv') ?? false)
-                                    ? Icons.tv
-                                    : req['type'] == 'fan'
-                                    ? Icons.toys
-                                    : Icons.build,
-                                size: 28,
-                                color: Colors.black54,
-                              ),
-      
-      
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(req['name'] ?? '',
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          overflow: TextOverflow.ellipsis)),
-                                  Text(req['time'] ?? '',
-                                      style: const TextStyle(color: Colors.grey)),
-                                ],
-                              ),
-                            ),
-                          ],
+
+
+      ListView.builder(
+      shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: requests.length,
+        itemBuilder: (context, index) {
+          final req = requests[index];
+          bool isPerson = req['type'] == 'person';
+
+          return Container(
+            margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.07),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                )
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    if (isPerson)
+                      CircleAvatar(
+                        radius: 28,
+                        backgroundImage: NetworkImage(req['avatar'] ?? ''),
+                      )
+                    else
+                      Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade100,
+                          shape: BoxShape.circle,
                         ),
-                        if (req['description'] != null && req['description']!.isNotEmpty)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8),
-                            child: Text(
-                              req['description']!,
-                              style: const TextStyle(fontSize: 14),
+                        child: Icon(
+                          req['type'] == 'plumbing'
+                              ? Icons.plumbing
+                              : req['type'] == 'ac'
+                              ? Icons.ac_unit
+                              : req['type'] == 'electric'
+                              ? Icons.electrical_services
+                              : req['type'] == 'appliance' &&
+                              (req['name']?.toLowerCase().contains('tv') ?? false)
+                              ? Icons.tv
+                              : req['type'] == 'fan'
+                              ? Icons.toys
+                              : Icons.build,
+                          size: 28,
+                          color: Colors.deepPurple,
+                        ),
+                      ),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            req['name'] ?? '',
+                            style: GoogleFonts.lato(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.black87,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            req['time'] ?? '',
+                            style: GoogleFonts.lato(
+                              fontSize: 13,
+                              color: Colors.grey[600],
                             ),
                           ),
-                        const SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            TextButton.icon(
-                              onPressed: () {},
-                              icon: const Icon(Icons.thumb_up_alt_outlined,color: Colors.pinkAccent,),
-                              label:  Text("Like",style: GoogleFonts.getFont("Inter Tight",color: Colors.pinkAccent,fontWeight: FontWeight.bold),),
-                              
-                            ),
-                            ElevatedButton.icon(
-                              onPressed: () {},
-                              icon: const Icon(Icons.check_circle_outline),
-                              label: const Text("Accept"),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.green.shade800,
-                                foregroundColor: Colors.white,
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
+                        ],
+                      ),
                     ),
-                  );
-                },
-              ),
-      
-              const SizedBox(height: 60),
+                  ],
+                ),
+                if (req['description'] != null && req['description']!.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 12),
+                    child: Text(
+                      req['description']!,
+                      style: GoogleFonts.lato(
+                        fontSize: 14,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton.icon(
+                      onPressed: () {},
+                      icon: const Icon(Icons.thumb_up_alt, size: 20, color: Colors.white),
+                      label: Text(
+                        "Like",
+                        style: GoogleFonts.lato(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.pinkAccent,
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        elevation: 2,
+                      ),
+                    ),
+                    ElevatedButton.icon(
+                      onPressed: () {},
+                      icon: const Icon(Icons.check_circle_outline, size: 20),
+                      label: Text(
+                        "Accept",
+                        style: GoogleFonts.lato(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green.shade700,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        elevation: 2,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+
+        const SizedBox(height: 60),
             ],
             
           ),

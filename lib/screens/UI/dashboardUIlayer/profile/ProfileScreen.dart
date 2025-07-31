@@ -23,7 +23,7 @@ class ProfileScreen extends StatelessWidget {
         centerTitle: true,
         elevation: 12,
         shadowColor: Colors.black45,
-        backgroundColor: Colors.deepPurple.shade400,
+        backgroundColor: Color(0xFF09203f),
         toolbarHeight: 70,
         titleTextStyle: GoogleFonts.lato(
           fontWeight: FontWeight.bold,
@@ -42,7 +42,7 @@ class ProfileScreen extends StatelessWidget {
                   height: 180,
                   decoration: const BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [Color(0xFFa18cd1), Color(0xFFfbc2eb)],
+                      colors: [Color(0xff537895),Color(0xFF09203f),],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
