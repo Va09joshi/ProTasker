@@ -31,18 +31,51 @@
 
   <h2>🖼️ Screenshots</h2>
 
- Here are some key screenshots from the application:
+Here are some key screenshots from the application:
 
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/0420452f-e328-49ed-996b-82fc75b9f1a1" alt="App Splash Screen" width="600"/><br/>
-  <img src="https://github.com/user-attachments/assets/3efcc49a-02bf-4d61-94c3-b3f0fc7edc33" alt="Signup Page" width="600"/><br/>
-  <img src="https://github.com/user-attachments/assets/9458da61-1848-45d4-bb93-20acdcaa9321" alt="Login Page" width="600"/><br/>
-  <img src="https://github.com/user-attachments/assets/d290db59-9ed9-4c4d-9f83-1f230eb6cce9" alt="Home Layout" width="600"/><br/>
-  <img src="https://github.com/user-attachments/assets/c130989f-a770-4dad-a57b-a850cf9bec12" alt="Maps Screen" width="600"/><br/>
-  <img src="https://github.com/user-attachments/assets/81d7db45-735d-41ae-a67e-a2a56774da15" alt="Jobs Section" width="600"/><br/>
-  <img src="https://github.com/user-attachments/assets/6e3a1bbd-99f2-43e2-81ef-8a39eb17ee3f" alt="Profile Page" width="600"/><br/>
-  <img src="https://github.com/user-attachments/assets/cfd72821-ca7c-40e3-a9c7-0ab11841ecb7" alt="Chatbox" width="600"/>
- </p>
+<table>
+  <tr>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/0420452f-e328-49ed-996b-82fc75b9f1a1" alt="Splash Screen" width="300"/><br/>
+      <sub>Splash Screen</sub>
+    </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/3efcc49a-02bf-4d61-94c3-b3f0fc7edc33" alt="Signup Page" width="300"/><br/>
+      <sub>Signup Page</sub>
+    </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/9458da61-1848-45d4-bb93-20acdcaa9321" alt="Login Page" width="300"/><br/>
+      <sub>Login Page</sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/d290db59-9ed9-4c4d-9f83-1f230eb6cce9" alt="Home Layout" width="300"/><br/>
+      <sub>Home Layout</sub>
+    </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/c130989f-a770-4dad-a57b-a850cf9bec12" alt="Maps Screen" width="300"/><br/>
+      <sub>Maps Screen</sub>
+    </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/81d7db45-735d-41ae-a67e-a2a56774da15" alt="Jobs Section" width="300"/><br/>
+      <sub>Jobs Section</sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/6e3a1bbd-99f2-43e2-81ef-8a39eb17ee3f" alt="Profile Page" width="300"/><br/>
+      <sub>Profile Page</sub>
+    </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/cfd72821-ca7c-40e3-a9c7-0ab11841ecb7" alt="Chatbox" width="300"/><br/>
+      <sub>Chatbox</sub>
+    </td>
+    <td align="center">
+      <!-- Optional: Add more images or leave this cell empty -->
+    </td>
+  </tr>
+</table>
 
 
   <h2>🏗️ Tech Stack</h2>
