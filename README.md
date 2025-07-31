@@ -162,16 +162,11 @@ IOS_MAPS_API_KEY=AIzaSy...</code></pre>
     Please read our <a href="CODE_OF_CONDUCT.md">Code of Conduct</a> and follow the contribution guidelines.
   </p>
 
-  <h2>📄 License</h2>
-  <p>
-    This project is licensed under the MIT License – see the
-    <a href="LICENSE">LICENSE</a> file for details.
-  </p>
 
   <h2>💬 Contact & Support</h2>
   <ul>
-    <li><a href="https://github.com/&lt;your‑username&gt;/protasker/issues">Issue Tracker</a></li>
-    <li>Email: <a href="mailto:maintainer@example.com">maintainer@example.com</a></li>
+    <li><a href="https://github.com/Va09joshi">Issue Tracker</a></li>
+    <li>Email: <a href="mailto:vaibhavjoshi0709@gmail.com">vaibhavjoshi0709@gmail.com</a></li>
   </ul>
 
   <hr />
