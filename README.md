@@ -32,50 +32,69 @@
   <h2>🖼️ Screenshots</h2>
 
 Here are some key screenshots from the application:
-
 <table>
   <tr>
     <td align="center">
-      <img src="https://github.com/user-attachments/assets/0420452f-e328-49ed-996b-82fc75b9f1a1" alt="Splash Screen" width="300"/><br/>
-      <sub>Splash Screen</sub>
+      <img src="https://github.com/user-attachments/assets/98cb5e98-8353-4ac3-836c-09be7b6cdd7b" alt="Screen 1" width="300"/><br/>
+      <sub>Screen 1</sub>
     </td>
     <td align="center">
-      <img src="https://github.com/user-attachments/assets/3efcc49a-02bf-4d61-94c3-b3f0fc7edc33" alt="Signup Page" width="300"/><br/>
-      <sub>Signup Page</sub>
+      <img src="https://github.com/user-attachments/assets/92cad1e9-966d-409c-83ad-d553bd3f565a" alt="Screen 2" width="300"/><br/>
+      <sub>Screen 2</sub>
     </td>
     <td align="center">
-      <img src="https://github.com/user-attachments/assets/9458da61-1848-45d4-bb93-20acdcaa9321" alt="Login Page" width="300"/><br/>
-      <sub>Login Page</sub>
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <img src="https://github.com/user-attachments/assets/d290db59-9ed9-4c4d-9f83-1f230eb6cce9" alt="Home Layout" width="300"/><br/>
-      <sub>Home Layout</sub>
-    </td>
-    <td align="center">
-      <img src="https://github.com/user-attachments/assets/c130989f-a770-4dad-a57b-a850cf9bec12" alt="Maps Screen" width="300"/><br/>
-      <sub>Maps Screen</sub>
-    </td>
-    <td align="center">
-      <img src="https://github.com/user-attachments/assets/81d7db45-735d-41ae-a67e-a2a56774da15" alt="Jobs Section" width="300"/><br/>
-      <sub>Jobs Section</sub>
+      <img src="https://github.com/user-attachments/assets/b8e4b6fb-50ce-4d28-8eef-4b142fe41b2f" alt="Screen 3" width="300"/><br/>
+      <sub>Screen 3</sub>
     </td>
   </tr>
   <tr>
     <td align="center">
-      <img src="https://github.com/user-attachments/assets/6e3a1bbd-99f2-43e2-81ef-8a39eb17ee3f" alt="Profile Page" width="300"/><br/>
-      <sub>Profile Page</sub>
+      <img src="https://github.com/user-attachments/assets/ba32579c-191b-4689-a5dd-6bce194038df" alt="Screen 4" width="300"/><br/>
+      <sub>Screen 4</sub>
     </td>
     <td align="center">
-      <img src="https://github.com/user-attachments/assets/cfd72821-ca7c-40e3-a9c7-0ab11841ecb7" alt="Chatbox" width="300"/><br/>
-      <sub>Chatbox</sub>
+      <img src="https://github.com/user-attachments/assets/9d4aca16-1351-4cb2-b12b-0871a70a12cb" alt="Screen 5" width="300"/><br/>
+      <sub>Screen 5</sub>
     </td>
     <td align="center">
-      <!-- Optional: Add more images or leave this cell empty -->
+      <img src="https://github.com/user-attachments/assets/30670d4c-dde4-42ce-ba13-9e48e9621923" alt="Screen 6" width="300"/><br/>
+      <sub>Screen 6</sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/9f4a836c-f065-4bd1-8947-17791862f780" alt="Screen 7" width="300"/><br/>
+      <sub>Screen 7</sub>
+    </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/8c0d5afc-bc6b-4eb9-ad30-8283cbbb14a4" alt="Screen 8" width="300"/><br/>
+      <sub>Screen 8</sub>
+    </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/15c0c218-dc30-4dba-8859-6d1edeaf175e" alt="Screen 9" width="300"/><br/>
+      <sub>Screen 9</sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/64d87911-72ab-459e-90c3-ddf54a100c38" alt="Screen 10" width="300"/><br/>
+      <sub>Screen 10</sub>
+    </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/91fbe077-e852-4a6d-9d79-4ebfc32100e3" alt="Screen 11" width="300"/><br/>
+      <sub>Screen 11</sub>
+    </td>
+    <td align="center">
+      <img src="https://github.com/user-attachments/assets/a60164b7-9f1e-4342-bc9c-de000a627762" alt="Screen 12" width="300"/><br/>
+      <sub>Screen 12</sub>
     </td>
   </tr>
 </table>
+
+
+
+
+
 
 
   <h2>🏗️ Tech Stack</h2>
