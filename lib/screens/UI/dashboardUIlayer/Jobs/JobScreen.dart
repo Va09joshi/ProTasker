@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class JobsScreen extends StatefulWidget {
-  const JobsScreen({Key? key}) : super(key: key);
+  const JobsScreen({Key? key, required String userId}) : super(key: key);
 
   @override
   State<JobsScreen> createState() => _JobsScreenState();
@@ -507,7 +507,7 @@ class _JobsScreenState extends State<JobsScreen> {
                 Expanded(
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.deepPurple),
+                        backgroundColor:  Color(0xFF13547a)),
                     onPressed: () {
                       setState(() {
                         _moreJobs.add(_Job(
@@ -526,9 +526,9 @@ class _JobsScreenState extends State<JobsScreen> {
                 Expanded(
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.deepPurple.shade50),
+                        backgroundColor: Colors.blueGrey),
                     onPressed: () => Navigator.pop(ctx),
-                    child: const Text('close'),
+                    child: const Text('close',style: TextStyle(color: Colors.white),),
                   ),
                 ),
               ],
@@ -548,7 +548,7 @@ class _JobsScreenState extends State<JobsScreen> {
 
         decoration: InputDecoration(
           labelText: label,
-          labelStyle: TextStyle(color: Colors.deepPurple,fontWeight: FontWeight.bold),
+          labelStyle: TextStyle(color: Colors.blueGrey.shade900,fontWeight: FontWeight.bold),
           hintText: hint,
           border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10)),

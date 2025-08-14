@@ -1,235 +1,239 @@
- import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:pro_tasker/screens/UI/login_screen.dart';
 
-import '../auth/auth_service.dart';
-import '../auth_page/authentication_page.dart';
-import 'dashboardScreen.dart';
+import '../UI/chooseusertype.dart';
+
+import 'login_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
-   const RegisterScreen({super.key});
+  const RegisterScreen({super.key});
 
-   @override
-   State<RegisterScreen> createState() => _RegisterScreenState();
- }
+  @override
+  State<RegisterScreen> createState() => _RegisterScreenState();
+}
 
- class _RegisterScreenState extends State<RegisterScreen> {
-   final TextEditingController emailController = TextEditingController();
-   final TextEditingController passwordController = TextEditingController();
-   final AuthService _auth = AuthService();
+class _RegisterScreenState extends State<RegisterScreen> {
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  bool isLoading = false;
 
-   bool rememberMe = false;
-   bool showPassword = false;
+  Future<void> _proceedToNext() async {
+    final name = nameController.text.trim();
+    final email = emailController.text.trim();
+    final password = passwordController.text.trim();
 
-   @override
-   void dispose() {
-     emailController.dispose();
-     passwordController.dispose();
-     super.dispose();
-   }
-   void _register() async {
-     String? result = await _auth.signUp(
-       email: emailController.text.trim(),
-       password: passwordController.text.trim(),
-     );
+    if (name.isEmpty || email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please fill in all the fields")),
+      );
+      return;
+    }
 
-     if (result == null) {
-       Navigator.pushReplacement(
-         context,
-         MaterialPageRoute(builder: (context) => Dashboardscreen()),
-       );
-     } else {
-       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result)));
-     }
-   }
+    setState(() => isLoading = true);
 
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
 
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ChooseUserTypePage(
+            userId: userCredential.user!.uid,
+            name: name,
+            email: email,
+            password: password,
+            isGoogleSignIn: false,
+          ),
+        ),
+      );
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'email-already-in-use') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("This email is already registered.")),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Error: ${e.message}")),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Unexpected error: $e")),
+      );
+    } finally {
+      setState(() => isLoading = false);
+    }
+  }
 
-   @override
-   Widget build(BuildContext context) {
-     return Scaffold(
-       backgroundColor: Colors.white,
-       body: SingleChildScrollView(
-         padding: const EdgeInsets.all(20),
-         child: Column(
-           crossAxisAlignment: CrossAxisAlignment.start,
-           children: [
-             SizedBox(height: 100),
+  Future<void> _googleContinue() async {
+    try {
+      setState(() => isLoading = true);
 
-             Text(
-               "Join With Us 👋🏿",
-               style: GoogleFonts.getFont("Inter Tight",
-                   fontSize: 28, fontWeight: FontWeight.bold),
-             ),
-             const SizedBox(height: 1),
-             Text(
-               "Let's continue the journey with the peoples.",
-               style: GoogleFonts.getFont("Inter",
-                   fontSize: 12, color: Colors.black87),
-             ),
-             const SizedBox(height: 30),
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      if (googleUser == null) {
+        setState(() => isLoading = false);
+        return;
+      }
 
-             TextField(
-               controller: emailController,
-               decoration: InputDecoration(
-                 labelText: 'Email',
-                 prefixIcon: const Icon(Icons.email_outlined),
-                 border: OutlineInputBorder(
-                   borderRadius: BorderRadius.circular(10),
-                 ),
-                 focusedBorder: const OutlineInputBorder(
-                   borderSide: BorderSide(color: Colors.black87),
-                 ),
-               ),
-             ),
-             const SizedBox(height: 20),
+      final GoogleSignInAuthentication googleAuth =
+      await googleUser.authentication;
 
-             TextField(
-               controller: passwordController,
-               obscureText: !showPassword,
-               decoration: InputDecoration(
-                 labelText: 'Password',
-                 prefixIcon: const Icon(Icons.lock_outline),
-                 suffixIcon: IconButton(
-                   icon: Icon(
-                       showPassword ? Icons.visibility : Icons.visibility_off),
-                   onPressed: () {
-                     setState(() {
-                       showPassword = !showPassword;
-                     });
-                   },
-                 ),
-                 border: OutlineInputBorder(
-                   borderRadius: BorderRadius.circular(10),
-                 ),
-                 focusedBorder: const OutlineInputBorder(
-                   borderSide: BorderSide(color: Colors.black87),
-                 ),
-               ),
-             ),
-             const SizedBox(height: 10),
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
 
-             Row(
-               children: [
-                 Checkbox(
-                   value: rememberMe,
-                   onChanged: (value) {
-                     setState(() {
-                       rememberMe = value!;
-                     });
-                   },
-                   activeColor: Colors.deepPurple,
-                 ),
-                  Text("I agree to ",),
-                  Text("Terms & Conditions.",style: TextStyle(color: Colors.deepPurple,fontWeight: FontWeight.w500),)
-               ],
-             ),
-             const SizedBox(height: 10),
+      final userCredential =
+      await FirebaseAuth.instance.signInWithCredential(credential);
+      final user = userCredential.user;
 
-             SizedBox(
-               width: double.infinity,
-               height: 50,
-               child: ElevatedButton(
-                 onPressed: ()async {
-                     _register();
-                 },
-                 style: ElevatedButton.styleFrom(
-                   backgroundColor: Color(0xff09205f),
-                   shape: RoundedRectangleBorder(
-                     borderRadius: BorderRadius.circular(30),
-                   ),
-                 ),
-                 child: Text(
-                   "Sign up",
-                   style: GoogleFonts.getFont("Inter",
-                       color: Colors.white, fontWeight: FontWeight.bold),
-                 ),
-               ),
-             ),
-             const SizedBox(height: 20),
+      if (user != null) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ChooseUserTypePage(
+              userId: user.uid,
+              name: user.displayName ?? '',
+              email: user.email ?? '',
+              password: '',
+              isGoogleSignIn: true,
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      print("Google sign-in error: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Google sign-in failed")),
+      );
+    } finally {
+      setState(() => isLoading = false);
+    }
+  }
 
-             Row(
-               children: const [
-                 Expanded(child: Divider()),
-                 Padding(
-                   padding: EdgeInsets.symmetric(horizontal: 10),
-                   child: Text("or"),
-                 ),
-                 Expanded(child: Divider()),
-               ],
-             ),
-             const SizedBox(height: 10),
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 40),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Text(
+                  'Create Account',
+                  style: GoogleFonts.poppins(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blueGrey.shade900,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 3),
+              Center(
+                child: Text(
+                  'Fill in your details to create an account',
+                  style: GoogleFonts.poppins(fontSize: 16),
+                ),
+              ),
+              const SizedBox(height: 40),
 
-             OutlinedButton.icon(
-               onPressed: () async {
-                 // Google sign-in logic
+              MyTextField(
+                controller: nameController,
+                hintText: 'Full Name',
+                obscureText: false,
+              ),
+              const SizedBox(height: 15),
 
-                 bool islogged = await login();
-                 if(islogged){
-                   Navigator.pushReplacement(context,MaterialPageRoute(builder: (context){
-                     return Dashboardscreen();
-                   }));
-                 }
-               },
-               icon: const Icon(FontAwesomeIcons.google,
-                   size: 25, color: Colors.black87),
-               label: Text(
-                 "Continue with Google",
-                 style: GoogleFonts.getFont("Inter",
-                     color: Colors.black87, fontWeight: FontWeight.w600),
-               ),
-               style: OutlinedButton.styleFrom(
-                 minimumSize: const Size(double.infinity, 50),
-                 side: const BorderSide(color: Colors.black54),
-               ),
-             ),
-             const SizedBox(height: 11),
+              MyTextField(
+                controller: emailController,
+                hintText: 'Email',
+                obscureText: false,
+              ),
+              const SizedBox(height: 15),
 
-             Row(
-               mainAxisAlignment: MainAxisAlignment.center,
-               children: [
-                 Text(
-                   "Already have an account?",
-                   style: GoogleFonts.getFont("Inter Tight",
-                       fontWeight: FontWeight.w500),
-                 ),
-                 TextButton(
-                   onPressed: () {
-                     Navigator.push(context,
-                         MaterialPageRoute(builder: (context) {
-                           return LoginScreeno();
-                         }));
-                   },
-                   child: Text(
-                     "Sign In",
-                     style: GoogleFonts.getFont("Inter",
-                         color: Colors.deepPurple, fontWeight: FontWeight.bold),
-                   ),
-                 ),
-               ],
-             ),
-             SizedBox(height: 22,),
-             Center(child: Text("Powered And Handled",style: GoogleFonts.getFont("Lato",fontSize: 14,fontWeight: FontWeight.bold),)),
-             Center(child: Text("By",style: GoogleFonts.getFont("Lato",fontSize: 14,fontWeight: FontWeight.bold),)),
+              MyTextField(
+                controller: passwordController,
+                hintText: 'Password',
+                obscureText: true,
+              ),
+              const SizedBox(height: 30),
 
-             Center(child: Image.asset("assets/images/logo2.png",width: 170,)),
-           ],
-         ),
-       ),
-     );
-   }
- }
-
- Future<bool> login() async {
-   final user = await GoogleSignIn().signIn();
-   GoogleSignInAuthentication userAuth = await user!.authentication;
-   var credential = GoogleAuthProvider.credential(idToken: userAuth.idToken,accessToken: userAuth.accessToken );
-
-   FirebaseAuth.instance.signInWithCredential(credential);
-
-   return await FirebaseAuth.instance.currentUser!=null;
- }
-
+              isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : Column(
+                children: [
+                  MyButton(
+                    onTap: _proceedToNext,
+                    text: 'Continue',
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      const Expanded(child: Divider()),
+                      Padding(
+                        padding:
+                        const EdgeInsets.symmetric(horizontal: 10),
+                        child: Text("or",
+                            style: GoogleFonts.poppins(fontSize: 14)),
+                      ),
+                      const Expanded(child: Divider()),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  OutlinedButton.icon(
+                    onPressed: _googleContinue,
+                    icon: const Icon(
+                      FontAwesomeIcons.google,
+                      color: Colors.green,
+                    ),
+                    label: Text(
+                      "Continue with Google",
+                      style: GoogleFonts.poppins(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      minimumSize: const Size.fromHeight(50),
+                      side: const BorderSide(color: Colors.black26),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              const Divider(height: 1, thickness: 1),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Already have an account?",
+                      style: GoogleFonts.poppins()),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      "Sign In",
+                      style: GoogleFonts.poppins(
+                        color: const Color(0xff09205f),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class Mapscreen extends StatefulWidget {
-   const Mapscreen({super.key});
+   const Mapscreen({super.key, required String userId});
 
    @override
    State<Mapscreen> createState() => _MapscreenState();

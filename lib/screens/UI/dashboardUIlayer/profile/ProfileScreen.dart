@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pro_tasker/screens/auth_page/authentication_page.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+  const ProfileScreen({super.key, required String userId});
 
   // Dummy numbers – fetch these from Firestore in real app
   final double avgRating = 4;
@@ -151,13 +152,16 @@ class ProfileScreen extends StatelessWidget {
               icon: FontAwesomeIcons.arrowRightFromBracket,
               label: 'Logout',
               isDestructive: true,
-              onTap: () {
-                // FirebaseAuth.instance.signOut();
-                FirebaseAuth.instance.signOut().then((val){
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
-                    return AuthenticationPage();
-                  }));
-                })
+              onTap: () async {
+                final GoogleSignIn googleSignIn = GoogleSignIn();
+
+                await FirebaseAuth.instance.signOut();
+                await googleSignIn.signOut();
+
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => AuthenticationPage()),
+                );
 ;              },
             ),
             const SizedBox(height: 24),

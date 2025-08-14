@@ -1,11 +1,14 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:pro_tasker/screens/UI/dashboardScreen.dart';
-import 'package:pro_tasker/screens/UI/register_screen.dart';
+// ignore_for_file: use_build_context_synchronously
 
+import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import 'package:pro_tasker/screens/UI/dashboardScreen.dart';
 import '../auth/auth_service.dart';
 
 class LoginScreeno extends StatefulWidget {
@@ -16,35 +19,89 @@ class LoginScreeno extends StatefulWidget {
 }
 
 class _LoginScreenoState extends State<LoginScreeno> {
+  final AuthService _auth = AuthService();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final AuthService _auth = AuthService();
-
-
-
+  bool isLoading = false;
   bool rememberMe = false;
-  bool showPassword = false;
 
   @override
-  void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+    _loadRememberedUser();
   }
 
-  void _login() async {
-    String? result = await _auth.signIn(
+  Future<void> _loadRememberedUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      rememberMe = prefs.getBool('rememberMe') ?? false;
+      emailController.text = prefs.getString('email') ?? '';
+      passwordController.text = prefs.getString('password') ?? '';
+    });
+  }
+
+  Future<void> _saveCredentials() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (rememberMe) {
+      await prefs.setBool('rememberMe', true);
+      await prefs.setString('email', emailController.text);
+      await prefs.setString('password', passwordController.text);
+    } else {
+      await prefs.clear();
+    }
+  }
+
+  Future<void> _login() async {
+    setState(() => isLoading = true);
+
+    final result = await _auth.signIn(
       email: emailController.text.trim(),
       password: passwordController.text.trim(),
     );
 
     if (result == null) {
+      final userId = FirebaseAuth.instance.currentUser!.uid;
+      await _saveCredentials();
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Dashboardscreen()),
+        MaterialPageRoute(builder: (_) => Dashboardscreen(userId: userId)),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result)));
+    }
+
+    setState(() => isLoading = false);
+  }
+
+  Future<void> _signInWithGoogle() async {
+    try {
+      setState(() => isLoading = true);
+
+      final googleUser = await GoogleSignIn().signIn();
+      if (googleUser == null) {
+        setState(() => isLoading = false);
+        return;
+      }
+
+      final googleAuth = await googleUser.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+      final userId = userCredential.user?.uid;
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => Dashboardscreen(userId: userId!)),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Google Sign-In Failed: ${e.toString()}")),
+      );
+    } finally {
+      setState(() => isLoading = false);
     }
   }
 
@@ -52,182 +109,175 @@ class _LoginScreenoState extends State<LoginScreeno> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 100),
-
-            Text(
-              "Welcome Back! 👋",
-              style: GoogleFonts.getFont("Inter Tight",
-                  fontSize: 28, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 1),
-            Text(
-              "Let's continue the journey with the peoples.",
-              style: GoogleFonts.getFont("Inter",
-                  fontSize: 12, color: Colors.black87),
-            ),
-            const SizedBox(height: 30),
-
-            TextField(
-              controller: emailController,
-              decoration: InputDecoration(
-                labelText: 'Email',
-                prefixIcon: const Icon(Icons.email_outlined),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                focusedBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black87),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 80),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Column(
+                  children: [
+                    Text(
+                      'Welcome Back!',
+                      style: GoogleFonts.poppins(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xff09205f),
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      'Let’s get to work! Sign in now.',
+                      style: GoogleFonts.poppins(fontSize: 16),
+                    ),
+                    const SizedBox(height: 40),
+                    MyTextField(
+                      controller: emailController,
+                      hintText: 'Email',
+                      obscureText: false,
+                    ),
+                    const SizedBox(height: 15),
+                    MyTextField(
+                      controller: passwordController,
+                      hintText: 'Password',
+                      obscureText: true,
+                    ),
+                    Row(
+                      children: [
+                        Checkbox(
+                          value: rememberMe,
+                          activeColor: const Color(0xff09205f),
+                          onChanged: (value) {
+                            setState(() => rememberMe = value ?? false);
+                          },
+                        ),
+                        Text("Remember Me", style: GoogleFonts.poppins()),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    isLoading
+                        ? const CircularProgressIndicator()
+                        : Column(
+                      children: [
+                        MyButton(
+                          onTap: _login,
+                          text: 'Login',
+                        ),
+                        const SizedBox(height: 11),
+                        Row(
+                          children: const [
+                            Expanded(child: Divider()),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Text("or"),
+                            ),
+                            Expanded(child: Divider()),
+                          ],
+                        ),
+                        const SizedBox(height: 11),
+                        OutlinedButton.icon(
+                          onPressed: _signInWithGoogle,
+                          icon: const FaIcon(FontAwesomeIcons.google, color: Colors.green),
+                          label: Text(
+                            "Sign in with Google",
+                            style: GoogleFonts.poppins(fontWeight: FontWeight.w600,color: Colors.black87),
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            minimumSize: const Size.fromHeight(50),
+                            side: const BorderSide(color: Colors.black87),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 30),
+                    const Divider(thickness: 1),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Don't have an account?", style: GoogleFonts.poppins()),
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: Text(
+                            "Register",
+                            style: GoogleFonts.poppins(color: Color(0xff09205f)),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-            ),
-            const SizedBox(height: 20),
-
-            TextField(
-              controller: passwordController,
-              obscureText: !showPassword,
-              decoration: InputDecoration(
-                labelText: 'Password',
-                prefixIcon: const Icon(Icons.lock_outline),
-                suffixIcon: IconButton(
-                  icon: Icon(
-                      showPassword ? Icons.visibility : Icons.visibility_off),
-                  onPressed: () {
-                    setState(() {
-                      showPassword = !showPassword;
-                    });
-                  },
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                focusedBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black87),
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
-
-            Row(
-              children: [
-                Checkbox(
-                  value: rememberMe,
-                  onChanged: (value) {
-                    setState(() {
-                      rememberMe = value!;
-                    });
-                  },
-                  activeColor: Colors.deepPurple,
-                ),
-                const Text("Remember me"),
-              ],
-            ),
-            const SizedBox(height: 10),
-
-            SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: ElevatedButton(
-                onPressed: () {
-                  _login();
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xff09205f),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-                child: Text(
-                  "Sign in",
-                  style: GoogleFonts.getFont("Inter",
-                      color: Colors.white, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-
-            Row(
-              children: const [
-                Expanded(child: Divider()),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
-                  child: Text("or"),
-                ),
-                Expanded(child: Divider()),
-              ],
-            ),
-            const SizedBox(height: 10),
-
-            OutlinedButton.icon(
-              onPressed: () async {
-                // Google sign-in logic
-
-                bool islogged = await login();
-                if(islogged){
-                  Navigator.pushReplacement(context,MaterialPageRoute(builder: (context){
-                     return Dashboardscreen();
-                  }));
-                }
-              },
-              icon: const Icon(FontAwesomeIcons.google,
-                  size: 25, color: Colors.black87),
-              label: Text(
-                "Continue with Google",
-                style: GoogleFonts.getFont("Inter",
-                    color: Colors.black87, fontWeight: FontWeight.w600),
-              ),
-              style: OutlinedButton.styleFrom(
-                minimumSize: const Size(double.infinity, 50),
-                side: const BorderSide(color: Colors.black54),
-              ),
-            ),
-            const SizedBox(height: 11),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Don't have an account?",
-                  style: GoogleFonts.getFont("Inter Tight",
-                      fontWeight: FontWeight.w500),
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                          return RegisterScreen();
-                        }));
-                  },
-                  child: Text(
-                    "Sign Up",
-                    style: GoogleFonts.getFont("Inter",
-                        color: Colors.deepPurple, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 22,),
-            Center(child: Text("Powered And Handled",style: GoogleFonts.getFont("Lato",fontSize: 14,fontWeight: FontWeight.bold),)),
-            Center(child: Text("By",style: GoogleFonts.getFont("Lato",fontSize: 14,fontWeight: FontWeight.bold),)),
-
-            Center(child: Image.asset("assets/images/logo2.png",width: 170,)),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
+}
 
- Future<bool> login() async {
-     final user = await GoogleSignIn().signIn();
-     GoogleSignInAuthentication userAuth = await user!.authentication;
-     var credential = GoogleAuthProvider.credential(idToken: userAuth.idToken,accessToken: userAuth.accessToken );
+/// ---------------- Custom Text Field ----------------
+class MyTextField extends StatelessWidget {
+  final TextEditingController controller;
+  final String hintText;
+  final bool obscureText;
 
-     FirebaseAuth.instance.signInWithCredential(credential);
+  const MyTextField({
+    Key? key,
+    required this.controller,
+    required this.hintText,
+    required this.obscureText,
+  }) : super(key: key);
 
-     return await FirebaseAuth.instance.currentUser!=null;
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      controller: controller,
+      obscureText: obscureText,
+      style: GoogleFonts.poppins(),
+      decoration: InputDecoration(
+        hintText: hintText,
+        hintStyle: GoogleFonts.poppins(color: Colors.grey),
+        filled: true,
+        fillColor: Colors.grey[100],
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
+      ),
+    );
+  }
+}
+
+/// ---------------- Custom Button ----------------
+class MyButton extends StatelessWidget {
+  final VoidCallback onTap;
+  final String text;
+
+  const MyButton({Key? key, required this.onTap, required this.text}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        decoration: BoxDecoration(
+          color:  Color(0xff09205f),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Center(
+          child: Text(
+            text,
+            style: GoogleFonts.poppins(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

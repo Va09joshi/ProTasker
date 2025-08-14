@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:pro_tasker/screens/UI/dashboardUIlayer/home/chatBot/screens/chatScreen.dart';
 
 class Homescreen extends StatelessWidget {
-  Homescreen({super.key});
+  Homescreen({super.key, required String userId});
 
   final List<Map<String, String>> requests = [
     {
@@ -76,6 +76,36 @@ class Homescreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false
+        ,
+        backgroundColor: Color(0xFF09213f),
+        toolbarHeight: 90,
+        elevation: 6,
+        shadowColor: Colors.black,
+
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Image.asset(
+              "assets/images/darklogo.png",
+              height: 150,
+            ),
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(FontAwesomeIcons.solidBell, color: Colors.white),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(FontAwesomeIcons.search, color: Colors.white),
+                      ),
+                    ],
+                   ),
+          ],
+        ),
+      ),
       backgroundColor: Colors.white12,
       floatingActionButton: GestureDetector(
         onTap: () {
@@ -161,52 +191,50 @@ class Homescreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              /// App Bar
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-                decoration: BoxDecoration(
-                  gradient: customGradient,
-                  borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(20),
-                    bottomRight: Radius.circular(20),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.3),
-                      offset: const Offset(0, 5),
-                      blurRadius: 12,
-                    )
-                  ],
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'ProTasker',
-                      style: GoogleFonts.lato(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(FontAwesomeIcons.solidBell, color: Colors.white),
-                        ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(FontAwesomeIcons.search, color: Colors.white),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-      
+              // /// App Bar
+              // Container(
+              //
+              //   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+              //   decoration: BoxDecoration(
+              //     gradient: customGradient,
+              //     borderRadius: const BorderRadius.only(
+              //       bottomLeft: Radius.circular(20),
+              //       bottomRight: Radius.circular(20),
+              //     ),
+              //     boxShadow: [
+              //       BoxShadow(
+              //         color: Colors.black.withOpacity(0.3),
+              //         offset: const Offset(0, 5),
+              //         blurRadius: 12,
+              //       )
+              //     ],
+              //   ),
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //     crossAxisAlignment: CrossAxisAlignment.center,
+              //     children: [
+              //
+              //
+              //
+              //       Row(
+              //         children: [
+              //           IconButton(
+              //             onPressed: () {},
+              //             icon: const Icon(FontAwesomeIcons.solidBell, color: Colors.white),
+              //           ),
+              //           IconButton(
+              //             onPressed: () {},
+              //             icon: const Icon(FontAwesomeIcons.search, color: Colors.white),
+              //           ),
+              //         ],
+              //       ),
+              //     ],
+              //   ),
+              // ),
+
+
               const SizedBox(height: 20),
-      
+
               /// Post Request
               Container(
                 padding: const EdgeInsets.all(16),
@@ -254,9 +282,9 @@ class Homescreen extends StatelessWidget {
                   ],
                 ),
               ),
-      
+
               const SizedBox(height: 20),
-      
+
               /// Title
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -269,7 +297,7 @@ class Homescreen extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 8),
-      
+
               /// List
 
 
@@ -419,9 +447,9 @@ class Homescreen extends StatelessWidget {
 
         const SizedBox(height: 60),
             ],
-            
+
           ),
-          
+
         ),
       ),
     );

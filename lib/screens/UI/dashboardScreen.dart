@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-
 import 'package:pro_tasker/screens/UI/dashboardUIlayer/Jobs/JobScreen.dart';
 import 'package:pro_tasker/screens/UI/dashboardUIlayer/home/HomeScreen.dart';
 import 'package:pro_tasker/screens/UI/dashboardUIlayer/map/MapScreen.dart';
 import 'package:pro_tasker/screens/UI/dashboardUIlayer/profile/ProfileScreen.dart';
 
 class Dashboardscreen extends StatefulWidget {
-  const Dashboardscreen({super.key});
+  final String userId;
+
+  const Dashboardscreen({super.key, required this.userId});
 
   @override
   State<Dashboardscreen> createState() => _DashboardscreenState();
@@ -17,37 +16,51 @@ class Dashboardscreen extends StatefulWidget {
 
 class _DashboardscreenState extends State<Dashboardscreen> {
   int _selectedindex = 0;
-
-  final List<Widget> _Screenstate = [
-    Homescreen(),
-    Mapscreen(),
-    JobsScreen(),
-    ProfileScreen(),
-  ];
+  late List<Widget> _Screenstate;
 
   final LinearGradient customGradient = const LinearGradient(
-    colors: [Color(0xFF09203f), Color(0xFF13547a)],
+    colors: [Color(0xff09205f),Color(0xFF09203f)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
 
   @override
+  void initState() {
+    super.initState();
+    _Screenstate = [
+      Homescreen(userId: widget.userId),
+      Mapscreen(userId: widget.userId),
+      JobsScreen(userId: widget.userId),
+      ProfileScreen(userId: widget.userId),
+    ];
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[100],
-
-      /// ✅ Shows selected page
       body: _Screenstate[_selectedindex],
-
-      /// ✅ Bottom Navigation Bar
       bottomNavigationBar: Container(
-        decoration: BoxDecoration(gradient: customGradient),
+        decoration: BoxDecoration(
+          gradient: customGradient,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 10,
+              offset: Offset(0, -2),
+            ),
+          ],
+        ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
           child: GNav(
             backgroundColor: Colors.transparent,
             activeColor: Colors.white,
-            color: Colors.white,
+            color: Colors.white70,
             gap: 8,
             selectedIndex: _selectedindex,
             onTabChange: (index) {
@@ -56,7 +69,7 @@ class _DashboardscreenState extends State<Dashboardscreen> {
               });
             },
             padding: const EdgeInsets.all(16),
-            tabBackgroundColor: Colors.white.withOpacity(0.2),
+            tabBackgroundColor: Colors.white.withOpacity(0.15),
             tabs: const [
               GButton(icon: Icons.home, text: "Home"),
               GButton(icon: Icons.location_on, text: "Map"),

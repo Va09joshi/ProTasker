@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,33 +13,32 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-     _navigateUser();
+    _navigateUser();
   }
 
   void _navigateUser() async {
-    await Future.delayed(const Duration(seconds: 2)); // Optional: show splash delay
+    await Future.delayed(const Duration(seconds: 1));
 
     User? user = FirebaseAuth.instance.currentUser;
 
     if (user != null) {
-      // ✅ User already signed in
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Dashboardscreen()),
+        MaterialPageRoute(
+          builder: (context) => Dashboardscreen(userId: user.uid),
+        ),
       );
     } else {
-      // 🚪 No user, go to Login
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => AuthenticationPage()),
       );
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,14 +47,13 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset("assets/images/workorder.png",width: 200,height: 200,),
-            Text("Pro Tasker",style: GoogleFonts.getFont("Noto Sans Old Italic",fontSize: 24,fontWeight: FontWeight.bold),)
+            Image.asset("assets/images/logo2.png", width: 300),
 
-          ]
-          ,
+
+
+          ],
         ),
       ),
-
     );
   }
 }

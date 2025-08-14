@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+
 import 'package:pro_tasker/screens/UI/dashboardScreen.dart';
 import 'package:pro_tasker/screens/UI/login_screen.dart';
 import 'package:pro_tasker/screens/UI/register_screen.dart';
@@ -15,6 +16,8 @@ class AuthenticationPage extends StatefulWidget {
 }
 
 class _AuthenticationPageState extends State<AuthenticationPage> {
+  final Color primaryColor = const Color(0xff09205f);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,36 +29,37 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Paw icon
-                Image.asset("assets/images/logo2.png",width: 250,),
+                Image.asset("assets/images/logo4.png", width: 220),
 
-                const SizedBox(height: 16),
+                const SizedBox(height: 24),
 
-                // Title
-              Text(
+                Text(
                   "Let's Get Started!",
-                  style:GoogleFonts.getFont("Inter Tight",fontSize: 30, fontWeight: FontWeight.w600),
+                  style: GoogleFonts.poppins(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w700,
+                    color: primaryColor,
+                  ),
+                ),
+                Text(
+                  "Dive into your account",
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    color: Colors.black54,
+                  ),
                 ),
 
+                const SizedBox(height: 30),
 
-                 Text(
-                  "Let's dive in into your account",
-                  style: GoogleFonts.getFont("Poppins",fontSize: 12, color: Colors.black87),
-                ),
-
-              SizedBox(height: 25),
-
-                // Individual Social Buttons
                 _googleButton(),
                 _facebookButton(),
                 _twitterButton(),
 
-                const SizedBox(height: 24),
+                const SizedBox(height: 26),
 
-                // Sign up button
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xff09205f),
+                    backgroundColor: primaryColor,
                     foregroundColor: Colors.white,
                     minimumSize: const Size(double.infinity, 50),
                     shape: RoundedRectangleBorder(
@@ -63,22 +67,22 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                     ),
                   ),
                   onPressed: () {
-                    Navigator.push(context,MaterialPageRoute(builder: (context){
-                      return RegisterScreen();
-                    }));
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const RegisterScreen()),
+                    );
                   },
-                  child: const Text(
+                  child: Text(
                     "Sign up",
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
                   ),
                 ),
 
                 const SizedBox(height: 12),
 
-                // Sign in button
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.deepPurple.shade50,
+                    backgroundColor: Colors.grey[100],
                     foregroundColor: Colors.black87,
                     minimumSize: const Size(double.infinity, 50),
                     shape: RoundedRectangleBorder(
@@ -86,22 +90,26 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
                     ),
                   ),
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context){
-                       return LoginScreeno();
-                    }));
-                  }
-
-
-                  ,
-                  child: const Text("Sign in"),
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const LoginScreeno()),
+                    );
+                  },
+                  child: Text(
+                    "Sign in",
+                    style: GoogleFonts.poppins(fontWeight: FontWeight.w500),
+                  ),
                 ),
 
-                const SizedBox(height: 16),
+                const SizedBox(height: 20),
 
                 Text(
-                  "Privacy Policy . Terms of Service",
-                  style: GoogleFonts.getFont("Poppins",color: Colors.black, fontSize: 12),
-                )
+                  "Privacy Policy • Terms of Service",
+                  style: GoogleFonts.poppins(
+                    fontSize: 12,
+                    color: Colors.black45,
+                  ),
+                ),
               ],
             ),
           ),
@@ -110,40 +118,56 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
     );
   }
 
+  /// Google Sign-In Button
   Widget _googleButton() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: OutlinedButton.icon(
+        icon: const FaIcon(FontAwesomeIcons.google, color: Colors.red),
+        label: Text(
+          "Continue with Google",
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.w600,
+            color: Colors.black,
+          ),
+        ),
         style: OutlinedButton.styleFrom(
           minimumSize: const Size(double.infinity, 50),
+          side: const BorderSide(color: Color(0xff09205f)),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
           ),
         ),
-        onPressed: () async{
-          // TODO: Handle Google Sign-In
-          bool islogged = await login();
-          if(islogged){
-            Navigator.pushReplacement(context,MaterialPageRoute(builder: (context){
-              return Dashboardscreen();
-            }));
+        onPressed: () async {
+          final userId = await signInWithGoogle();
+          if (userId != null) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => Dashboardscreen(userId: userId)),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Google sign-in failed.")),
+            );
           }
         },
-        icon: FaIcon(FontAwesomeIcons.google, color: Colors.red),
-        label:  Text(
-          "Continue with Google",
-          style: GoogleFonts.getFont("Open Sans",color: Colors.black,fontWeight: FontWeight.w600),
-        ),
       ),
     );
   }
 
-
-
+  /// Facebook Stub Button
   Widget _facebookButton() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: OutlinedButton.icon(
+        icon: const FaIcon(FontAwesomeIcons.facebook, color: Colors.blue),
+        label: Text(
+          "Continue with Facebook",
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.w600,
+            color: Colors.black,
+          ),
+        ),
         style: OutlinedButton.styleFrom(
           minimumSize: const Size(double.infinity, 50),
           shape: RoundedRectangleBorder(
@@ -151,21 +175,25 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
           ),
         ),
         onPressed: () {
-          // TODO: Handle Facebook Sign-In
+          // TODO: Implement Facebook sign-in
         },
-        icon: const FaIcon(FontAwesomeIcons.facebook, color: Colors.blue),
-        label: Text(
-          "Continue with Facebook",
-          style: GoogleFonts.getFont("Open Sans",color: Colors.black,fontWeight: FontWeight.w600),
-        ),
       ),
     );
   }
 
+  /// Twitter Stub Button
   Widget _twitterButton() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: OutlinedButton.icon(
+        icon: const FaIcon(FontAwesomeIcons.twitter, color: Colors.lightBlue),
+        label: Text(
+          "Continue with Twitter",
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.w600,
+            color: Colors.black,
+          ),
+        ),
         style: OutlinedButton.styleFrom(
           minimumSize: const Size(double.infinity, 50),
           shape: RoundedRectangleBorder(
@@ -173,25 +201,31 @@ class _AuthenticationPageState extends State<AuthenticationPage> {
           ),
         ),
         onPressed: () {
-          // TODO: Handle Twitter Sign-In
+          // TODO: Implement Twitter sign-in
         },
-        icon: const FaIcon(FontAwesomeIcons.twitter, color: Colors.lightBlue),
-        label:  Text(
-          "Continue with Twitter",
-          style: GoogleFonts.getFont("Open Sans",color: Colors.black,fontWeight: FontWeight.w600),
-        ),
       ),
     );
   }
 }
 
-Future<bool> login() async {
-  final user = await GoogleSignIn().signIn();
-  GoogleSignInAuthentication userAuth = await user!.authentication;
-  var credential = GoogleAuthProvider.credential(idToken: userAuth.idToken,accessToken: userAuth.accessToken );
+/// Sign-in with Google and return user UID or null
+Future<String?> signInWithGoogle() async {
+  try {
+    final googleUser = await GoogleSignIn().signIn();
+    if (googleUser == null) return null;
 
-  FirebaseAuth.instance.signInWithCredential(credential);
+    final googleAuth = await googleUser.authentication;
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
 
-  return await FirebaseAuth.instance.currentUser!=null;
+    final userCredential =
+    await FirebaseAuth.instance.signInWithCredential(credential);
+
+    return userCredential.user?.uid;
+  } catch (e) {
+    debugPrint("Google Sign-in error: $e");
+    return null;
+  }
 }
-
